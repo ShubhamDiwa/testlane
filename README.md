@@ -5,6 +5,7 @@ SEO-oriented Android closed-testing service website. React + TypeScript + Tailwi
 ## Included
 
 - Responsive marketing page, package details, FAQ and a sourced testing guide.
+- Animated Android device demo with four selectable testing scenes, pause/replay controls, viewport-aware playback, reduced-motion support, and progressive section reveals. No animation library or external media requests.
 - Three-step validated app intake, review and consent.
 - Explicit browser-only demo drafts, deletion controls, sample dashboard, feedback and text report export.
 - Admin demo: search, status filters and session-only status updates.

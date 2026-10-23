@@ -1,10 +1,13 @@
 import Link from 'next/link';
-import { ArrowRight, Check, CheckCheck, ShieldCheck, MessageSquareText, MousePointer2, Activity, ArrowUpRight, Smartphone, Clock3, Bug, Users, Sparkles } from 'lucide-react';
-import { Header, Footer, Brand } from './ui';
+import { ArrowRight, Check, CheckCheck, ShieldCheck, MessageSquareText, Activity, ArrowUpRight, Smartphone, Clock3, Bug, Users } from 'lucide-react';
+import { Header, Footer } from './ui';
 import { FAQ } from './faq';
+import TestingAnimation from './testing-animation';
+import MotionEnhancements from './motion-enhancements';
+import './premium.css';
 
 export default function Home() {
-  return <><Header/><main>
+  return <><Header/><main><MotionEnhancements/>
     <section className="hero wrap">
       <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> BUILT FOR INDEPENDENT DEVELOPERS</div>
         <h1>You built the app.<br/>We'll bring<br/><span className="purple">the testers.</span><span className="headline-spark">✳</span></h1>
@@ -12,19 +15,7 @@ export default function Home() {
         <div className="hero-actions"><Link className="button" href="/start">Start your closed test <ArrowUpRight size={18}/></Link><a className="text-link" href="#how-it-works">See how it works <ArrowRight size={17}/></a></div>
         <div className="hero-assurances"><span><Check size={15}/> Real Android users</span><span><Check size={15}/> No Play Console password needed</span></div>
       </div>
-      <div className="hero-art" aria-label="Illustrative preview of a closed testing dashboard">
-        <div className="art-grid"/><div className="orbit orbit-one"/><div className="orbit orbit-two"/>
-        <div className="art-label"><span className="status-dot"/> YOUR NEXT LAUNCH, IN MOTION</div>
-        <div className="floating-note"><span className="note-icon"><CheckCheck size={18}/></span><div><b>Small team. Big next step.</b><span>Built around your launch.</span></div><Sparkles size={17}/></div>
-        <div className="preview-window"><div className="window-top"><Brand small/><span className="sample-tag">SAMPLE PROJECT</span></div>
-          <div className="preview-project"><span className="app-icon"><Activity size={24}/></span><div><b>Habit Garden</b><small>Android · Closed testing</small></div><span className="badge green">In progress</span></div>
-          <div className="preview-stats"><div><small>Testers enrolled</small><strong>12<span>/12</span></strong><span className="tiny-green"><Check size={12}/> Test group ready</span></div><div><small>Testing progress</small><strong>08<span>/14 days</span></strong><span className="muted tiny">Illustrative timeline</span></div></div>
-          <div className="day-bars">{Array.from({length:14},(_,i)=><i key={i} className={i<8?'filled':''}/>)}</div>
-          <div className="preview-bottom"><div className="avatars">{['JD','AM','SK','RL'].map((s,i)=><span className={'avatar avatar-'+i} key={s}>{s}</span>)}<span className="avatar extra">+8</span></div><span><span className="status-dot"/> Real people, real feedback</span></div>
-        </div>
-        <div className="feedback-float"><span className="feedback-icon"><MessageSquareText size={18}/></span><div><b>Feedback that moves you forward</b><span>Reproduce it. Fix it. Retest it.</span></div></div>
-        <div className="art-caption"><span>12 PEOPLE. ONE STEP CLOSER.</span><MousePointer2 size={18}/></div>
-      </div>
+      <TestingAnimation/>
     </section>
     <section className="facts-strip"><div className="wrap facts-inner"><span className="facts-intro">Your code deserves<br/><b>a proper test drive.</b></span><div><Users/><span><strong>12 real testers</strong><small>A dedicated closed-test group</small></span></div><div><Clock3/><span><strong>14 continuous days</strong><small>A clear, coordinated test period</small></span></div><div><MessageSquareText/><span><strong>Useful feedback</strong><small>Find friction before your users do</small></span></div></div></section>
     <section id="how-it-works" className="section wrap"><div className="section-top"><div><div className="eyebrow">LESS CHASING. MORE BUILDING.</div><h2>From “almost ready”<br/>to ready for the next step.</h2></div><p>You focus on improving your app.<br/>We help coordinate the people testing it.</p></div>
