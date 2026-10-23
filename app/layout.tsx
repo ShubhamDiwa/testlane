@@ -1,0 +1,5 @@
+import type { Metadata } from 'next';
+import './globals.css';
+const origin=process.env.NEXT_PUBLIC_SITE_URL||'https://testlane-closed-testing.woodsyfield32.chatgpt.site';
+export const metadata:Metadata={metadataBase:new URL(origin),title:{default:'Testlane — 12 Real Testers for Your Android Closed Test',template:'%s | Testlane'},description:'Coordinate 12 real Android testers for a 14-day Google Play closed test. Structured feedback, clear progress, and a practical testing summary for your next launch.',alternates:{canonical:'/'},openGraph:{type:'website',siteName:'Testlane',title:'You built the app. We’ll bring the testers.',description:'12 real testers. 14 days of closed testing. Meaningful feedback.',images:[{url:'/social-card.png',width:1200,height:630}]},twitter:{card:'summary_large_image'},icons:{icon:'/favicon.svg'}};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body><a href="#main-content" className="skip-link">Skip to content</a><div id="main-content">{children}</div></body></html>}
