@@ -53,3 +53,18 @@
     .faq-list details[open] p { animation: none; }
   }
 }
+[data-theme=dark] .home-redesign .facts-inner strong { color: var(--ink); }
+[data-theme=dark] .home-redesign .facts-inner small { color: var(--muted); }
+[data-theme=dark] .home-redesign .facts-inner svg { color: #c9b6ff; }
+@media (hover: hover) {
+  .home-redesign .facts-inner > div:hover,
+  .home-redesign .faq-list details > summary:hover {
+    background: color-mix(in srgb, var(--lane-violet) 25%, transparent);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .home-redesign .facts-inner > div { transition: background-color .2s ease, translate .2s ease; }
+  .home-redesign .facts-inner svg { transition: transform .25s ease; }
+  .home-redesign .facts-inner > div:hover { translate: 0 -4px; }
+  .home-redesign .facts-inner > div:hover svg { transform: scale(1.18) rotate(-8deg); }
+}
