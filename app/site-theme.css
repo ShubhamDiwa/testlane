@@ -46,3 +46,17 @@ html[data-theme=dark]{
 [data-theme=dark] .home-redesign .step:hover { border-color: #72638a; }
 [data-theme=dark] .home-redesign .step-top span { color: #c9b6ff; }
 [data-theme=dark] .home-redesign .step-top svg { background: #3c3155; color: #e2d6ff; }
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="card-visible"] {
+    animation: card-scroll-in .58s cubic-bezier(.22, 1, .36, 1) var(--card-reveal-delay, 0ms) backwards;
+  }
+  [data-reveal="card-visible"]:nth-child(2n) { --card-reveal-delay: 65ms; }
+  .steps-grid [data-reveal="card-visible"]:nth-child(3) { --card-reveal-delay: 130ms; }
+  .steps-grid [data-reveal="card-visible"]:nth-child(4) { --card-reveal-delay: 195ms; }
+}
+
+@keyframes card-scroll-in {
+  from { opacity: .42; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}

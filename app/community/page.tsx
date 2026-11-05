@@ -1,3 +1,4 @@
+import MotionEnhancements from '../motion-enhancements';
 import {supaData} from '../../lib/community-supabase';
 import {RemoveListing} from './remove-listing';
 import { ArrowUpRight, MessageCircle, Smartphone } from 'lucide-react';
@@ -20,7 +21,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  ])):[null,null,null];
  const liveApps=directory.filter(app=>app.play_store_url);
  const closedTests=directory.filter(app=>!app.play_store_url);
- return <><Header session={user?{name:member?.name||user.displayName||'Member',google}:null}/><main className="wrap page-shell community-page">
+ return <><Header session={user?{name:member?.name||user.displayName||'Member',google}:null}/><main className="wrap page-shell community-page"><MotionEnhancements/>
  <div className="page-heading community-masthead"><div><div className="eyebrow">TESTLANE / COMMUNITY</div><h1>Find your next test.</h1><p>Explore Android apps, recruit volunteer testers, and share useful feedback.</p><div className="hero-actions"><a className="button" href="#try-apps">Try new apps</a><a className="outline-button" href="#post">Post my app</a></div></div><aside className="community-metrics" aria-label="Directory overview"><div><strong>{directory.length}</strong><span>Apps in this view</span></div>{signupCount!==null&&<div><strong>{signupCount.toLocaleString('en-US')}</strong><span>Total signups</span></div>}<div><strong>{directory.reduce((sum,app)=>sum+(app.play_store_url?0:Math.max(0,app.spots-app.approved)),0)}</strong><span>Open tester spots</span></div></aside></div>
  <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="#closed-tests">Closed tests</a><a href="#post">Post an app</a>{member&&<a href="#workspace">My workspace</a>}</nav>
  {typeof params.notice==='string'&&<p role="status" className="preview-banner">{params.notice.slice(0,180)}</p>}
