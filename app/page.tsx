@@ -8,7 +8,7 @@ import './future.css';
 export default function Home() {
   return <><Header/><main className="home-redesign">
     <div className="launch-hero"><section className="hero wrap">
-      <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> A FREE COMMUNITY FOR ANDROID DEVELOPERS &amp; TESTERS</div>
+      <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> A FREE COMMUNITY FOR DEVELOPERS &amp; TESTERS</div>
         <h1>Better apps.<br/><span className="purple">Built together.</span></h1>
         <p className="hero-description">Try an app from the community today. When you are ready to launch, share yours and get feedback from people who know what it takes to build.</p>
         <div className="hero-actions"><a className="button" href="/community#post">Get my app tested <ArrowUpRight size={18}/></a><a className="text-link" href="/community#try-apps">Try new apps <ArrowRight size={17}/></a></div>
