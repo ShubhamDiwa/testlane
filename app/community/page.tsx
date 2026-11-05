@@ -10,7 +10,7 @@ export const dynamic='force-dynamic';
 export const metadata={title:'App Testing Community',alternates:{canonical:'/community'}};
 const endpoint='/api/community';
 const hidden=(name:string,value:string)=><input type="hidden" name={name} value={value}/>;
-export default async function Community({searchParams}:{searchParams:Promise<{notice?:string}>}){
+export default async function Community({searchParams}:{searchParams:Promise<{notice?:string;tests?:string}>}){
  const google=usesGoogle(),user=await identity(),db=google?null:communityDb(),id=user?.userId??'';
  const [directory,member,params,signupCount]=await Promise.all([google?googleDirectory(user):listApps(id),user?memberProfile(user):null,searchParams,google?supaData<number>('rpc/community_signup_count'):null]);
  const [incoming,joined,notes]=member&&user?(google?await googleWorkspace(user):await Promise.all([
@@ -20,9 +20,12 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  ])):[null,null,null];
  const liveApps=directory.filter(app=>app.play_store_url);
  const closedTests=directory.filter(app=>!app.play_store_url);
+ const openTests=closedTests.filter(app=>app.approved<app.spots);
+ const showAllTests=params.tests==='all';
+ const displayedTests=showAllTests?closedTests:openTests;
  return <><Header session={user?{name:member?.name||user.displayName||'Member',google}:null}/><main className="wrap page-shell community-page">
  <div className="page-heading community-masthead"><div><div className="eyebrow">TESTLANE / COMMUNITY</div><h1>Find your next test.</h1><p>Explore Android apps, recruit volunteer testers, and share useful feedback.</p><div className="hero-actions"><a className="button" href="#try-apps">Try new apps</a><a className="outline-button" href="#post">Post my app</a></div></div><aside className="community-metrics" aria-label="Directory overview"><div><strong>{directory.length}</strong><span>Apps in this view</span></div>{signupCount!==null&&<div><strong>{signupCount.toLocaleString('en-US')}</strong><span>Total signups</span></div>}<div><strong>{directory.reduce((sum,app)=>sum+(app.play_store_url?0:Math.max(0,app.spots-app.approved)),0)}</strong><span>Open tester spots</span></div></aside></div>
- <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="#closed-tests">Closed tests</a><a href="#post">Post an app</a>{member&&<a href="#workspace">My workspace</a>}</nav>
+ <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="/community#closed-tests">Needs testers</a><a href="#post">Post an app</a>{member&&<a href="#workspace">My workspace</a>}</nav>
  {typeof params.notice==='string'&&<p role="status" className="preview-banner">{params.notice.slice(0,180)}</p>}
  <div id="directory"><section id="try-apps" className="community-section">
  <div className="eyebrow">ON GOOGLE PLAY</div><h2>Try new apps</h2>
@@ -34,8 +37,13 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  <a className="outline-button" href={app.play_store_url!} target="_blank" rel="noopener noreferrer">View on Google Play <ArrowUpRight size={15} aria-hidden="true"/></a>{google&&app.owner===id&&<RemoveListing id={app.id} name={app.name}/>}</div>
  </article>)}</div>:<p>No live apps yet. <a className="text-link" href="#post">List your Play Store app</a></p>}
  </section>
- <section id="closed-tests" className="community-section"><div className="eyebrow">HELP DEVELOPERS LAUNCH</div><h2>Closed tests</h2>
- {closedTests.length===0?<div className="panel"><h3>No closed tests listed yet</h3><p>Post a closed test to request volunteer testers for free.</p><a className="outline-button" href="#post">Get my app tested</a></div>:<div className="community-grid">{closedTests.map(app=><article key={app.id} className="panel listing-card"><div className="eyebrow">{Math.max(0,app.spots-app.approved)} tester spots open</div><h3>{app.name}</h3><p className="community-text">{app.description}</p><p>{app.android} · Posted by {app.developer}</p>
+ <section id="closed-tests" className="community-section"><div className="eyebrow">HELP DEVELOPERS LAUNCH</div><h2>{showAllTests?'All closed tests':'Needs testers'}</h2>
+ <p>Find Android apps with open testing spots. Newest requests appear first.</p>
+ <nav className="community-nav" aria-label="Closed test filters">
+  <a href="/community#closed-tests" aria-current={!showAllTests?'true':undefined}>Open spots ({openTests.length})</a>
+  <a href="/community?tests=all#closed-tests" aria-current={showAllTests?'true':undefined}>All closed tests ({closedTests.length})</a>
+ </nav>
+ {displayedTests.length===0?<div className="panel"><h3>{closedTests.length?'No open tester spots right now':'No closed tests listed yet'}</h3><p>Post a closed test to request volunteer testers for free.</p><a className="outline-button" href="#post">Get my app tested</a></div>:<div className="community-grid">{displayedTests.map(app=><article key={app.id} className="panel listing-card"><div className="eyebrow">{Math.max(0,app.spots-app.approved)} tester spots open</div><h3>{app.name}</h3><p className="community-text">{app.description}</p><p>{app.android} · Posted by {app.developer}</p>
  {app.owner===id?<div className="hero-actions"><span className="badge purple-badge">Your app</span>{google&&<RemoveListing id={app.id} name={app.name}/>}</div>:app.status==='approved'?<a className="outline-button" href="#workspace">Open testing instructions</a>:app.status?<span className="badge purple-badge">Request {app.status}</span>:app.approved>=app.spots?<span className="badge purple-badge">No spots left</span>:member?<form action={endpoint} method="post" className="community-form">{hidden('action','request')}{hidden('app',app.id)}<label className="field">Google Play email<input type="email" name="playEmail" required maxLength={254}/></label><p>Sending a request shares this email with the developer so they can add you in Play Console.</p><button className="button button-small">Request to test</button></form>:<a className="outline-button" href="#post">Join to request a spot</a>}
  {google&&<a className="outline-button comments-link" href={'/community/discussion/'+app.id}><MessageCircle size={19} aria-hidden="true"/> Comments</a>}
  </article>)}</div>}</section></div>
