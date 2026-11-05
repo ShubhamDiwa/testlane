@@ -8,15 +8,15 @@ import './future.css';
 export default function Home() {
   return <><Header/><main className="home-redesign">
     <div className="launch-hero"><section className="hero wrap">
-      <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> THE ANDROID TESTING COMMUNITY</div>
+      <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> A FREE COMMUNITY FOR ANDROID BUILDERS &amp; TESTERS</div>
         <h1>Better apps.<br/><span className="purple">Built together.</span></h1>
-        <p className="hero-description">Find real people to test your Android app. Try something new, give useful feedback, and help independent developers launch.</p>
+        <p className="hero-description">Try an app from the community today. When you are ready to launch, share yours and get feedback from people who know what it takes to build.</p>
         <div className="hero-actions"><a className="button" href="/community#post">Get my app tested <ArrowUpRight size={18}/></a><a className="text-link" href="/community#try-apps">Try new apps <ArrowRight size={17}/></a></div>
         <div className="hero-assurances"><span><Check size={15}/> Real Android users</span><span><Check size={15}/> No Play Console password needed</span></div>
       </div>
       <TestingAnimation/>
     </section></div>
-    <section className="facts-strip"><div className="wrap facts-inner"><span className="facts-intro">Your code deserves<br/><b>a proper test drive.</b></span><div><Users/><span><strong>Free to join</strong><small>Recruit volunteer testers</small></span></div><div><Clock3/><span><strong>Closed testing</strong><small>Set your own testing goals</small></span></div><div><MessageSquareText/><span><strong>Useful feedback</strong><small>Find friction before your users do</small></span></div></div></section>
+    <section className="facts-strip"><div className="wrap facts-inner"><span className="facts-intro">Small acts of feedback.<br/><b>Better apps for everyone.</b></span><div><Users/><span><strong>Free to join</strong><small>Recruit volunteer testers</small></span></div><div><Clock3/><span><strong>Closed testing</strong><small>Set your own testing goals</small></span></div><div><MessageSquareText/><span><strong>Useful feedback</strong><small>Find friction before your users do</small></span></div></div></section>
     <section id="how-it-works" className="section wrap"><div className="section-top"><div><div className="eyebrow">LESS CHASING. MORE BUILDING.</div><h2>From “almost ready”<br/>to ready for the next step.</h2></div><p>You focus on improving your app.<br/>Find volunteers and coordinate testing together.</p></div>
       <div className="steps-grid">{[
         ['01',<Smartphone key="a"/>, 'Tell us about your app', 'Share your closed-testing link, target users, and the workflows you want tested. Your Play Console stays yours.'],
