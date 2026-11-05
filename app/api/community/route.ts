@@ -1,6 +1,6 @@
 import {identity,memberProfile,usesGoogle} from '../../community/google-data';
 import {supaData} from '../../../lib/community-supabase';
-import {playTestingLink} from '../../../lib/play-testing-link';
+import {playStoreLink,playTestingLink} from '../../../lib/play-testing-link';
 import {communityDb} from '../../community/data';
 
 export async function POST(req:Request){
@@ -24,6 +24,14 @@ export async function POST(req:Request){
    return back('You joined Testlane.');
   }
   if(!await memberProfile(user))return back('Register as a member first.','post');
+  if(action==='post-live'&&google){
+   const name=val('name',80),description=val('description',600),android=val('android',80);
+   if(!name||!description||!android)return back('Enter the app name, description, and Android requirements.','post');
+   const url=playStoreLink(val('link',500));
+   if(!url)return back('Paste the official Play Store app link, starting with https://play.google.com/store/apps/details?id=','post');
+   await supaData('rpc/community_post_live_app',token,{p_name:name,p_description:description,p_android:android,p_link:url});
+   return back('Your Google Play app is listed.','directory');
+  }
   if(action==='post'){
    const name=val('name',80),description=val('description',600),android=val('android',80),link=val('link',500),instructions=val('instructions',1500),spots=Number(val('spots',3));
    if(!name||!description||!android||!instructions)return back('Enter the app name, description, Android requirements, and testing instructions.','post');

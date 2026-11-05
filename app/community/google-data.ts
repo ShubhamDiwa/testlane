@@ -1,3 +1,4 @@
+import {playStoreLink} from '../../lib/play-testing-link';
 import {googleConfig,googleUser,params,supaData} from '../../lib/community-supabase';
 import {getChatGPTUser} from '../chatgpt-auth';
 import {communityDb,type Listing} from './data';
@@ -7,16 +8,16 @@ export async function memberProfile(user:{userId:string;token?:string}){
  if(!usesGoogle())return communityDb().prepare('SELECT name FROM members WHERE id=?').bind(user.userId).first<{name:string}>();
  return (await supaData<{name:string}[]>('community_members?'+params({select:'name',id:'eq.'+user.userId,limit:'1'}),user.token))[0]??null;
 }
-type GoogleApp={id:string;owner:string;name:string;description:string;android:string;spots:number;community_members:{name:string}|null};
+type GoogleApp={id:string;owner:string;name:string;description:string;android:string;spots:number;play_store_url?:string|null;community_members:{name:string}|null};
 export async function googleDirectory(user?:{userId:string;token?:string}|null):Promise<Listing[]>{
  const [apps,requests,availability]=await Promise.all([
-  supaData<GoogleApp[]>('community_apps?'+params({select:'id,owner,name,description,android,spots,community_members!community_apps_owner_fkey(name)',order:'created_at.desc',limit:'100'}),user?.token),
+  supaData<GoogleApp[]>('community_apps?'+params({select:'*,community_members!community_apps_owner_fkey(name)',order:'created_at.desc',limit:'100'}),user?.token),
   user?supaData<{app:string;status:string}[]>('community_requests?'+params({select:'app,status',member:'eq.'+user.userId}),user.token):[],
   supaData<{app:string;open_spots:number}[]>('rpc/community_open_spots',user?.token)
  ]);
  const states=new Map(requests.map(r=>[r.app,r.status]));
  const spots=new Map(availability.map(r=>[r.app,r.open_spots]));
- return apps.map(({community_members,...a})=>({...a,developer:community_members?.name??'Community member',approved:a.spots-(spots.get(a.id)??0),status:states.get(a.id)??null}));
+ return apps.map(({community_members,...a})=>({...a,play_store_url:a.play_store_url?playStoreLink(a.play_store_url):null,developer:community_members?.name??'Community member',approved:a.spots-(spots.get(a.id)??0),status:states.get(a.id)??null}));
 }
 export async function googleWorkspace(user:{userId:string;token?:string}){
  const [incoming,joined,notes]=await Promise.all([
