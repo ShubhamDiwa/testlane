@@ -6,7 +6,7 @@ export async function POST(req:Request){
  const origin=new URL(req.url).origin;
  if(req.headers.get('origin')!==origin || req.headers.get('sec-fetch-site')==='cross-site')return new Response('Forbidden',{status:403});
  const user=await identity();
- if(!user)return new Response('Sign in first.',{status:401});
+ if(!user)return new Response(null,{status:303,headers:{Location:'/login?error=session','Cache-Control':'no-store'}});
  function back(message:string,section='workspace'){return new Response(null,{status:303,headers:{Location:'/community?notice='+encodeURIComponent(message)+'#'+section,'Cache-Control':'no-store'}})}
  let signup=false;
  const signupError=(reason:string)=>new Response(null,{status:303,headers:{Location:'/signup?error='+reason,'Cache-Control':'no-store'}});
@@ -35,7 +35,11 @@ export async function POST(req:Request){
   if(action==='request'){
    const email=val('playEmail',254);
    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return back('Enter the email you use with Google Play.','directory');
-   if(google){await supaData('community_requests',token,{app,play_email:email});return back('Request sent to the developer.','directory')}
+   if(google){
+    try{await supaData('community_requests',token,{app,play_email:email})}
+    catch{return back('Request not sent. Check if spots are still open or you already requested this app.','directory')}
+    return back('Request sent to the developer.','directory')
+   }
    const result=await db!.prepare(`INSERT OR IGNORE INTO community_requests(app,member,play_email)
    SELECT id,?,? FROM community_apps a WHERE id=? AND owner<>? AND spots>
    (SELECT count(*) FROM community_requests WHERE app=a.id AND status='approved')`).bind(id,email,app,id).run();

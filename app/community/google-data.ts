@@ -9,12 +9,14 @@ export async function memberProfile(user:{userId:string;token?:string}){
 }
 type GoogleApp={id:string;owner:string;name:string;description:string;android:string;spots:number;community_members:{name:string}|null};
 export async function googleDirectory(user?:{userId:string;token?:string}|null):Promise<Listing[]>{
- const [apps,requests]=await Promise.all([
+ const [apps,requests,availability]=await Promise.all([
   supaData<GoogleApp[]>('community_apps?'+params({select:'id,owner,name,description,android,spots,community_members!community_apps_owner_fkey(name)',order:'created_at.desc',limit:'100'}),user?.token),
-  user?supaData<{app:string;status:string}[]>('community_requests?'+params({select:'app,status',member:'eq.'+user.userId}),user.token):[]
+  user?supaData<{app:string;status:string}[]>('community_requests?'+params({select:'app,status',member:'eq.'+user.userId}),user.token):[],
+  supaData<{app:string;open_spots:number}[]>('rpc/community_open_spots',user?.token)
  ]);
  const states=new Map(requests.map(r=>[r.app,r.status]));
- return apps.map(({community_members,...a})=>({...a,developer:community_members?.name??'Community member',approved:0,status:states.get(a.id)??null}));
+ const spots=new Map(availability.map(r=>[r.app,r.open_spots]));
+ return apps.map(({community_members,...a})=>({...a,developer:community_members?.name??'Community member',approved:a.spots-(spots.get(a.id)??0),status:states.get(a.id)??null}));
 }
 export async function googleWorkspace(user:{userId:string;token?:string}){
  const [incoming,joined,notes]=await Promise.all([
