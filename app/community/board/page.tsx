@@ -1,3 +1,5 @@
+import {Plus} from 'lucide-react';
+import './board.css';
 import {Header, Footer} from '../../ui';
 import {googleConfig, googleUser, params, supaData} from '../../../lib/community-supabase';
 import {memberProfile} from '../google-data';
@@ -17,17 +19,18 @@ const notices = new Map([
   ['posted', 'Your post is live.'],
   ['invalid-post', 'Choose a post type and check the title and description lengths.'],
   ['invalid-link', 'Enter a public HTTP or HTTPS test link without login credentials.'],
+  ['invalid-image', 'Choose a PNG, JPEG, or WebP image up to 1 MB.'],
   ['invalid-comment', 'Comments must be 2 to 2,000 characters.'],
   ['failed', 'That action could not be saved. Please try again.'],
 ]);
 type Post = {
   id: string; kind: string; title: string; body: string; test_url: string | null;
-  author_name: string; vote_count: number; comment_count: number;
+  has_image?: boolean; author_name: string; vote_count: number; comment_count: number;
 };
 type Comment = {id: string; body: string; community_members: {name: string}};
 
 export default async function CommunityBoard({searchParams}: {
-  searchParams: Promise<{kind?: string; post?: string; notice?: string}>;
+  searchParams: Promise<{kind?: string; post?: string; notice?: string; compose?: string}>;
 }) {
   const query = await searchParams;
   const enabled = Boolean(googleConfig());
@@ -53,9 +56,10 @@ export default async function CommunityBoard({searchParams}: {
 
   return <><Header session={user ? {name: member?.name || user.displayName || 'Member', google: true} : null}/>
     <main className="wrap page-shell community-page">
-      <div className="page-heading"><h1>Community Board</h1>
+      <div className="page-heading board-heading"><div><div className="eyebrow">TESTLANE COMMUNITY</div><h1>Community Board</h1>
         <p>Get feedback from real people. Share a design, ask a coding question, or give someone a task to try on your website.</p>
-        <a className="text-link" href={post ? board : '/community'}>{post ? 'Back to the board' : 'Back to app testing'}</a>
+        <a className="text-link" href={post ? board : '/community'}>{post ? 'Back to the board' : 'Back to app testing'}</a></div>
+        {!post && <a className="button board-new" href={member ? board+'?compose=1'+(selected?'&kind='+selected:'')+'#new-post' : '/community#post'}><Plus size={20} aria-hidden="true"/> New post</a>}
       </div>
       {notice && <p role="status" className="preview-banner">{notice}</p>}
       {!post && <nav className="community-nav" aria-label="Post filters">
@@ -63,17 +67,18 @@ export default async function CommunityBoard({searchParams}: {
         {categories.map(([id, name]) => <a key={id} href={board+'?kind='+id} aria-current={selected === id ? 'true' : undefined}>{name}</a>)}
         <a href={board+'?kind=unanswered'} aria-current={query.kind === 'unanswered' ? 'true' : undefined}>Needs an answer</a>
       </nav>}
-      {!post && member && <details className="panel">
-        <summary>Create a post</summary>
-        <form action={endpoint} method="post" className="community-form">
+      {!post && member && query.compose === '1' && <section id="new-post" className="panel board-composer">
+        <h2>Create a post</h2>
+        <form action={endpoint} method="post" encType="multipart/form-data" className="community-form">
           <input type="hidden" name="action" value="post"/>
           <label className="field">Post type<select name="kind" defaultValue={selected ?? 'web-test'}>{categories.map(([id, name]) => <option value={id} key={id}>{name}</option>)}</select></label>
           <label className="field">Title<input name="title" required minLength={5} maxLength={120}/></label>
           <label className="field">Details<textarea name="body" required minLength={10} maxLength={4000} rows={5} placeholder="For web testing, include one task and what you want people to pay attention to."/></label>
           <label className="field">Test link (required for web testing)<input type="url" name="test_url" maxLength={2048} placeholder="https://example.com"/></label>
+          <label className="field">Image (optional)<input type="file" name="image" accept="image/png,image/jpeg,image/webp"/><small>PNG, JPEG, or WebP up to 1 MB. Images are public.</small></label>
           <button className="button">Publish post</button>
         </form>
-      </details>}
+      </section>}
       {!member && enabled && <p><a className="text-link" href="/community#post">Join Testlane to post, comment or vote</a></p>}
       {!enabled && <p>The board is available on the Google sign-in deployment.</p>}
       <section className="community-section" aria-label={post ? 'Post' : 'Post feed'}>
@@ -82,6 +87,7 @@ export default async function CommunityBoard({searchParams}: {
           <div className="eyebrow">{categories.find(([id]) => id === item.kind)?.[1]} · {item.author_name}</div>
           <h2><a href={board+'?post='+item.id}>{item.title}</a></h2>
           <p className="community-text" style={{overflowWrap: 'anywhere'}}>{post ? item.body : item.body.slice(0, 360) + (item.body.length > 360 ? '…' : '')}</p>
+          {item.has_image && <img className="board-image" src={endpoint+'/image?post='+item.id} alt={"Attachment for "+item.title} loading="lazy"/>}
           {item.test_url && /^https?:\/\//i.test(item.test_url) && <p><a className="text-link" href={item.test_url} target="_blank" rel="noopener noreferrer nofollow ugc">Open website to test ↗</a></p>}
           <div className="hero-actions">
             {member ? <form action={endpoint} method="post">

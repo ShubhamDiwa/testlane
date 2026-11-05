@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import {NextResponse} from 'next/server';
 import {googleUser, supaData, supaFetch} from '../../../../lib/community-supabase';
 import {memberProfile} from '../../../community/google-data';
@@ -35,7 +36,19 @@ export async function POST(request: Request) {
         }
         testUrl = url.href;
       }
-      await supaData('community_posts', user.token, {kind, title, body, test_url: testUrl});
+      let imageData: string | undefined;
+      const image = form.get('image');
+      if (image instanceof File && image.size > 0) {
+        if (image.size > 1024 * 1024) return finish('invalid-image');
+        const bytes = Buffer.from(await image.arrayBuffer());
+        let mime: string;
+        if (bytes.subarray(0, 8).toString('hex') === '89504e470d0a1a0a') mime = 'image/png';
+        else if (bytes.subarray(0, 3).toString('hex') === 'ffd8ff') mime = 'image/jpeg';
+        else if (bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP') mime = 'image/webp';
+        else return finish('invalid-image');
+        imageData = 'data:' + mime + ';base64,' + bytes.toString('base64');
+      }
+      await supaData('community_posts', user.token, {kind, title, body, test_url: testUrl, image_data: imageData});
       return finish('posted');
     }
 
