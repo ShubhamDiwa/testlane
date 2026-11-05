@@ -2,12 +2,11 @@ import { ArrowRight, Check, CheckCheck, ShieldCheck, MessageSquareText, Activity
 import { Header, Footer } from './ui';
 import { FAQ } from './faq';
 import TestingAnimation from './testing-animation';
-import MotionEnhancements from './motion-enhancements';
 import './premium.css';
 import './future.css';
 
 export default function Home() {
-  return <><Header/><main className="home-redesign"><MotionEnhancements/>
+  return <><Header/><main className="home-redesign">
     <div className="launch-hero"><section className="hero wrap">
       <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> THE ANDROID TESTING COMMUNITY</div>
         <h1>Better apps.<br/><span className="purple">Built together.</span></h1>
