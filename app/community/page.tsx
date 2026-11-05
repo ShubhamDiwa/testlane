@@ -1,6 +1,6 @@
 import {supaData} from '../../lib/community-supabase';
 import {RemoveListing} from './remove-listing';
-import { ArrowUpRight, Smartphone } from 'lucide-react';
+import { ArrowUpRight, MessageCircle, Smartphone } from 'lucide-react';
 import {Header,Footer} from '../ui';
 import {chatGPTSignInPath} from '../chatgpt-auth';
 import {communityDb,listApps} from './data';
@@ -29,7 +29,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  {liveApps.length?<div className="community-grid live-app-grid">{liveApps.map(app=><article className="panel listing-card" key={app.id}>
  <div className="listing-heading"><span className="listing-icon"><Smartphone size={21} aria-hidden="true"/></span><div><div className="eyebrow">Live on Google Play</div><h3>{app.name}</h3></div></div>
  <p className="community-text">{app.description}</p>
- {google&&<a className="text-link" href={'/community/discussion/'+app.id}>Comments</a>}
+ {google&&<a className="outline-button comments-link" href={'/community/discussion/'+app.id}><MessageCircle size={19} aria-hidden="true"/> Comments</a>}
  <div className="listing-footer"><p>Posted by <strong>{app.developer}</strong><br/>Android {app.android.replace(/^android\s+/i,'')}</p>
  <a className="outline-button" href={app.play_store_url!} target="_blank" rel="noopener noreferrer">View on Google Play <ArrowUpRight size={15} aria-hidden="true"/></a>{google&&app.owner===id&&<RemoveListing id={app.id} name={app.name}/>}</div>
  </article>)}</div>:<p>No live apps yet. <a className="text-link" href="#post">List your Play Store app</a></p>}
@@ -37,7 +37,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  <section id="closed-tests" className="community-section"><div className="eyebrow">HELP DEVELOPERS LAUNCH</div><h2>Closed tests</h2>
  {closedTests.length===0?<div className="panel"><h3>No closed tests listed yet</h3><p>Post a closed test to request volunteer testers for free.</p><a className="outline-button" href="#post">Get my app tested</a></div>:<div className="community-grid">{closedTests.map(app=><article key={app.id} className="panel listing-card"><div className="eyebrow">{Math.max(0,app.spots-app.approved)} tester spots open</div><h3>{app.name}</h3><p className="community-text">{app.description}</p><p>{app.android} · Posted by {app.developer}</p>
  {app.owner===id?<div className="hero-actions"><span className="badge purple-badge">Your app</span>{google&&<RemoveListing id={app.id} name={app.name}/>}</div>:app.status==='approved'?<a className="outline-button" href="#workspace">Open testing instructions</a>:app.status?<span className="badge purple-badge">Request {app.status}</span>:app.approved>=app.spots?<span className="badge purple-badge">No spots left</span>:member?<form action={endpoint} method="post" className="community-form">{hidden('action','request')}{hidden('app',app.id)}<label className="field">Google Play email<input type="email" name="playEmail" required maxLength={254}/></label><p>Sending a request shares this email with the developer so they can add you in Play Console.</p><button className="button button-small">Request to test</button></form>:<a className="outline-button" href="#post">Join to request a spot</a>}
- {google&&<a className="text-link" href={'/community/discussion/'+app.id}>Comments</a>}
+ {google&&<a className="outline-button comments-link" href={'/community/discussion/'+app.id}><MessageCircle size={19} aria-hidden="true"/> Comments</a>}
  </article>)}</div>}</section></div>
  <section id="post" className="panel">
  {!user?<><h2>Join Testlane</h2><p>Sign in to register, post an app, or request to test.</p><a className="button" target="_top" href={google?'/auth/google/start':chatGPTSignInPath('/community#post')}>Continue with {google?'Google':'ChatGPT'}</a></>:!member?<><h2>Create your member profile</h2><p>Your display name appears to other members. Your account email stays private.</p><form action={endpoint} method="post" className="community-form">{hidden('action','register')}<label className="field">Display name<input name="name" required minLength={2} maxLength={40}/></label><button className="button">Join for free</button></form></>:<>

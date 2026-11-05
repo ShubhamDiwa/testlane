@@ -1,0 +1,11 @@
+.comment-thread { max-width: 840px; margin-inline: auto; }
+.comment-thread h1 { font-size: clamp(30px, 5vw, 48px); margin: 20px 0 12px; }
+.comment-thread h2 { display: flex; align-items: center; gap: 10px; font-size: 23px; margin-bottom: 16px; }
+.comment-thread h2 svg { flex: none; }
+.comment-composer { padding: clamp(14px, 3vw, 24px); border: 1px solid var(--lane-stroke); border-radius: 14px; background: var(--lane-paper); }
+.comment-composer .field { font-size: 15px; }
+.comment-composer .field textarea { min-height: 130px; font-size: 16px; }
+.comment-composer .button { gap: 8px; }
+.comment-list { margin-top: 32px; }
+.comment-reply { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; padding: 16px; margin-top: 10px; border: 1px solid var(--lane-stroke); border-radius: 12px; background: var(--lane-paper); }
+.comment-reply p { margin: 4px 0 0; font-size: 16px; line-height: 1.65; }

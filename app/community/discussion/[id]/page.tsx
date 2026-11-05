@@ -1,3 +1,6 @@
+import {MessageCircle, Send, UserRound} from 'lucide-react';
+import '../../community.css';
+import './comments.css';
 import {notFound} from 'next/navigation';
 import {Header, Footer} from '../../../ui';
 import {params, supaData} from '../../../../lib/community-supabase';
@@ -28,20 +31,20 @@ export default async function Discussion({params: route, searchParams}: {
  if (!apps[0]) notFound();
  const member = user ? await memberProfile(user) : null;
  return <><Header session={user?{name:member?.name||user.displayName||'Member',google:true}:null}/>
- <main className="wrap page-shell community-page"><article className="panel prose">
+ <main className="wrap page-shell community-page"><article className="panel comment-thread">
  <a className="text-link" href="/community#directory">← App directory</a>
- <h1>{apps[0].name}</h1><h2>Comments</h2>
+ <h1>{apps[0].name}</h1><h2><MessageCircle aria-hidden="true"/> Comments</h2>
  {query.notice === 'sent' && <p role="status">Your comment was posted.</p>}
  {query.notice === 'error' && <p role="status">Could not post your comment. Enter 2–1,000 characters and try again.</p>}
- {member ? <form action="/api/community" method="post" className="community-form">
+ {member ? <form action="/api/community" method="post" className="community-form comment-composer">
  <input type="hidden" name="action" value="comment"/><input type="hidden" name="app" value={id}/>
- <label className="field">Public comment<textarea name="body" required minLength={2} maxLength={1000}/></label>
- <button className="button" type="submit">Post comment</button>
+ <label className="field">Public comment<textarea name="body" placeholder="Share your feedback about this app…" required minLength={2} maxLength={1000}/></label>
+ <button className="button" type="submit"><Send size={17} aria-hidden="true"/> Post comment</button>
  </form> : <p><a href={user?'/community#post':'/login'}>{user?'Create your member profile':'Sign in'}</a> to comment.</p>}
- <section aria-label="Recent comments"><h2>Recent comments</h2>
+ <section className="comment-list" aria-label="Recent comments"><h2>Recent comments</h2>
  {comments.length === 0 && <p>No comments yet.</p>}
- {comments.map(comment => <article key={comment.id} className="community-record">
- <strong>{comment.community_members.name}</strong><p className="community-text">{comment.body}</p>
+ {comments.map(comment => <article key={comment.id} className="comment-reply">
+ <span className="profile-icon"><UserRound size={17} aria-hidden="true"/></span><div><strong>{comment.community_members.name}</strong><p className="community-text">{comment.body}</p></div>
  </article>)}
  </section></article></main><Footer/></>;
 }
