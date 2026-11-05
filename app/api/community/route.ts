@@ -30,7 +30,7 @@ export async function POST(req:Request){
    const url=playStoreLink(val('link',500));
    if(!url)return back('Paste the official Play Store app link, starting with https://play.google.com/store/apps/details?id=','post');
    await supaData('rpc/community_post_live_app',token,{p_name:name,p_description:description,p_android:android,p_link:url});
-   return back('Your Google Play app is listed.','directory');
+   return back('Your Google Play app is listed.','try-apps');
   }
   if(action==='post'){
    const name=val('name',80),description=val('description',600),android=val('android',80),link=val('link',500),instructions=val('instructions',1500),spots=Number(val('spots',3));
@@ -40,21 +40,21 @@ export async function POST(req:Request){
    if(!url)return back('Paste a Google Play app listing URL with an id, or a closed-testing web link from Play Console.','post');
    if(google)await supaData('rpc/community_post_app',token,{p_name:name,p_description:description,p_android:android,p_spots:spots,p_link:url,p_instructions:instructions});
    else await db!.prepare('INSERT INTO community_apps (id,owner,name,description,android,spots,link,instructions,created) VALUES (?,?,?,?,?,?,?,?,?)').bind(crypto.randomUUID(),id,name,description,android,spots,url,instructions,Date.now()).run();
-   return back('Your app is listed.','directory');
+   return back('Your app is listed.','closed-tests');
   }
   const app=val('app',50);
   if(action==='request'){
    const email=val('playEmail',254);
-   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return back('Enter the email you use with Google Play.','directory');
+   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return back('Enter the email you use with Google Play.','closed-tests');
    if(google){
     try{await supaData('community_requests',token,{app,play_email:email})}
-    catch{return back('Request not sent. Check if spots are still open or you already requested this app.','directory')}
-    return back('Request sent to the developer.','directory')
+    catch{return back('Request not sent. Check if spots are still open or you already requested this app.','closed-tests')}
+    return back('Request sent to the developer.','closed-tests')
    }
    const result=await db!.prepare(`INSERT OR IGNORE INTO community_requests(app,member,play_email)
    SELECT id,?,? FROM community_apps a WHERE id=? AND owner<>? AND spots>
    (SELECT count(*) FROM community_requests WHERE app=a.id AND status='approved')`).bind(id,email,app,id).run();
-   return back(result.meta.changes?'Request sent to the developer.':'No request was added. Check availability or your existing requests.','directory');
+   return back(result.meta.changes?'Request sent to the developer.':'No request was added. Check availability or your existing requests.','closed-tests');
   }
   if(action==='approve'||action==='decline'){
    const member=val('member',150);

@@ -12,7 +12,7 @@ export default function Home() {
       <div className="hero-copy"><div className="eyebrow"><span className="status-dot"/> THE ANDROID TESTING COMMUNITY</div>
         <h1>Better apps.<br/><span className="purple">Built together.</span></h1>
         <p className="hero-description">Find real people to test your Android app. Try something new, give useful feedback, and help independent developers launch.</p>
-        <div className="hero-actions"><a className="button" href="/community#post">Get my app tested <ArrowUpRight size={18}/></a><a className="text-link" href="/community#directory">Try new apps <ArrowRight size={17}/></a></div>
+        <div className="hero-actions"><a className="button" href="/community#post">Get my app tested <ArrowUpRight size={18}/></a><a className="text-link" href="/community#try-apps">Try new apps <ArrowRight size={17}/></a></div>
         <div className="hero-assurances"><span><Check size={15}/> Real Android users</span><span><Check size={15}/> No Play Console password needed</span></div>
       </div>
       <TestingAnimation/>

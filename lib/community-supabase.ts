@@ -24,8 +24,9 @@ export async function googleUser(){
  const response=await supaFetch('/auth/v1/user',token);
  if(response.status===401||response.status===403)return null;
  if(!response.ok)throw new Error('Could not verify session');
- const user=await response.json() as {id?:string};
- return user.id?{userId:user.id,token}:null;
+ const user=await response.json() as {id?:string;user_metadata?:{full_name?:unknown;name?:unknown}};
+ const name=user.user_metadata?.full_name??user.user_metadata?.name;
+ return user.id?{userId:user.id,token,displayName:typeof name==='string'?name.trim().slice(0,80):''}:null;
 }
 export async function supaData<T>(resource:string,token?:string,body?:object):Promise<T>{
  const r=await supaFetch('/rest/v1/'+resource,token,body?{method:'POST',body:JSON.stringify(body)}:{});
