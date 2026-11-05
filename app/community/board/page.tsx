@@ -1,3 +1,4 @@
+import {DeletePost} from './delete-post';
 import {Plus} from 'lucide-react';
 import './board.css';
 import {Header, Footer} from '../../ui';
@@ -16,6 +17,7 @@ const categories = [
   ['fixed', 'Tested & fixed'],
 ] as const;
 const notices = new Map([
+  ['deleted', 'Your post was deleted.'],
   ['posted', 'Your post is live.'],
   ['invalid-post', 'Choose a post type and check the title and description lengths.'],
   ['invalid-link', 'Enter a public HTTP or HTTPS test link without login credentials.'],
@@ -24,7 +26,7 @@ const notices = new Map([
   ['failed', 'That action could not be saved. Please try again.'],
 ]);
 type Post = {
-  id: string; kind: string; title: string; body: string; test_url: string | null;
+  id: string; author: string; kind: string; title: string; body: string; test_url: string | null;
   has_image?: boolean; author_name: string; vote_count: number; comment_count: number;
 };
 type Comment = {id: string; body: string; community_members: {name: string}};
@@ -94,6 +96,7 @@ export default async function CommunityBoard({searchParams}: {
               <input type="hidden" name="post" value={item.id}/>
               <button className="outline-button" name="action" value={voted.has(item.id) ? 'remove-vote' : 'helpful'} aria-pressed={voted.has(item.id)}>Helpful · {item.vote_count}</button>
             </form> : <span>Helpful · {item.vote_count}</span>}
+            {member && user?.userId === item.author && <DeletePost id={item.id} title={item.title}/>}
             <a className="outline-button" href={board+'?post='+item.id+'#comments'}>Comments · {item.comment_count}</a>
           </div>
         </article>)}

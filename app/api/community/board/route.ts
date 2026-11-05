@@ -53,6 +53,15 @@ export async function POST(request: Request) {
     }
 
     if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(post)) return finish('failed');
+    if (action === 'delete-post') {
+      const response = await supaFetch(
+        '/rest/v1/community_posts?id=eq.' + post + '&author=eq.' + user.userId + '&select=id',
+        user.token, {method: 'DELETE', headers: {Prefer: 'return=representation'}},
+      );
+      if (!response.ok) return finish('failed');
+      const deleted = await response.json() as {id: string}[];
+      return finish(deleted.length ? 'deleted' : 'failed');
+    }
     target.searchParams.set('post', post);
     if (action === 'comment') {
       const body = field('body');

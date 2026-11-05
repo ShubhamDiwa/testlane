@@ -12,6 +12,6 @@ export async function GET(request: Request) {
   return new Response(new Uint8Array(Buffer.from(image[2], 'base64')), {headers: {
     'Content-Type': image[1],
     'X-Content-Type-Options': 'nosniff',
-    'Cache-Control': 'public, max-age=3600',
+    'Cache-Control': 'no-store',
   }});
 }
