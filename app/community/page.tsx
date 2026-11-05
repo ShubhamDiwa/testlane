@@ -25,8 +25,18 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  const displayedTests=showAllTests?closedTests:openTests;
  return <><Header session={user?{name:member?.name||user.displayName||'Member',google}:null}/><main className="wrap page-shell community-page">
  <div className="page-heading community-masthead"><div><div className="eyebrow">TESTLANE / COMMUNITY</div><h1>Find your next test.</h1><p>Explore Android apps, recruit volunteer testers, and share useful feedback.</p><div className="hero-actions"><a className="button" href="#try-apps">Try new apps</a><a className="outline-button" href="#post">Post my app</a></div></div><aside className="community-metrics" aria-label="Directory overview"><div><strong>{directory.length}</strong><span>Apps in this view</span></div>{signupCount!==null&&<div><strong>{signupCount.toLocaleString('en-US')}</strong><span>Total signups</span></div>}<div><strong>{directory.reduce((sum,app)=>sum+(app.play_store_url?0:Math.max(0,app.spots-app.approved)),0)}</strong><span>Open tester spots</span></div></aside></div>
- <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="/community#closed-tests">Needs testers</a><a href="#post">Post an app</a>{member&&<a href="#workspace">My workspace</a>}</nav>
+ <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="/community#closed-tests">Needs testers</a><a href="#post">Post an app</a>{member&&<><a href="#notifications">Notifications</a><a href="#workspace">My workspace</a></>}</nav>
  {typeof params.notice==='string'&&<p role="status" className="preview-banner">{params.notice.slice(0,180)}</p>}
+ {member&&<section id="notifications" className="community-section panel" aria-labelledby="notifications-heading">
+  <h2 id="notifications-heading">Notifications</h2>
+  {!joined?.results.length&&!notes?.results.length&&<p>No approvals or feedback yet.</p>}
+  {joined?.results.map(app=><article className="community-record" key={app.id}>
+   <a className="text-link" href={'#testing-'+app.id}>Request approved for {app.name}</a>
+  </article>)}
+  {notes?.results.map(note=><article className="community-record" key={note.id}>
+   <a className="text-link" href={'#feedback-'+note.id}>Feedback on {note.name} from {note.tester}</a>
+  </article>)}
+ </section>}
  <div id="directory"><section id="try-apps" className="community-section">
  <div className="eyebrow">ON GOOGLE PLAY</div><h2>Try new apps</h2>
  {liveApps.length?<div className="community-grid live-app-grid">{liveApps.map(app=><article className="panel listing-card" key={app.id}>
@@ -65,8 +75,8 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  </>}</section>
  {member&&<section id="workspace" className="community-section"><div className="eyebrow">MEMBER WORKSPACE</div><h2>Hi, {member.name}.</h2><div className="community-grid">
  <section className="panel"><h3>Incoming tester requests</h3>{!incoming?.results.length&&<p>No tester requests yet.</p>}{incoming?.results.map(r=><form className="community-form community-record" key={r.app+r.member} action={endpoint} method="post">{hidden('app',r.app)}{hidden('member',r.member)}<p><strong>{r.tester}</strong> · {r.name} · {r.status}<br/>{r.email}</p>{r.status==='pending'&&<div className="hero-actions"><button className="button button-small" name="action" value="approve">Approve</button><button className="outline-button" name="action" value="decline">Decline</button></div>}</form>)}</section>
- <section className="panel"><h3>Apps you're testing</h3>{!joined?.results.length&&<p>Approved tests will appear here.</p>}{joined?.results.map(a=><article className="community-record" key={a.id}><h3>{a.name}</h3><p className="community-text">{a.instructions}</p><a className="text-link" href={a.link} target="_blank" rel="noopener noreferrer">Open Google Play opt-in ↗</a><form className="community-form" action={endpoint} method="post">{hidden('action','feedback')}{hidden('app',a.id)}<label className="field">Send feedback<textarea required minLength={5} maxLength={2000} name="body" placeholder="What happened? What did you expect?"/></label><button className="button button-small">Send feedback</button></form></article>)}</section>
- <section className="panel"><h3>Feedback on your apps</h3>{!notes?.results.length&&<p>No feedback yet.</p>}{notes?.results.map(n=><article className="community-record" key={n.id}><strong>{n.name} · {n.tester}</strong><p className="community-text">{n.body}</p></article>)}</section>
+ <section className="panel"><h3>Apps you're testing</h3>{!joined?.results.length&&<p>Approved tests will appear here.</p>}{joined?.results.map(a=><article className="community-record" id={'testing-'+a.id} key={a.id}><h3>{a.name}</h3><p className="community-text">{a.instructions}</p><a className="text-link" href={a.link} target="_blank" rel="noopener noreferrer">Open Google Play opt-in ↗</a><form className="community-form" action={endpoint} method="post">{hidden('action','feedback')}{hidden('app',a.id)}<label className="field">Send feedback<textarea required minLength={5} maxLength={2000} name="body" placeholder="What happened? What did you expect?"/></label><button className="button button-small">Send feedback</button></form></article>)}</section>
+ <section className="panel"><h3>Feedback on your apps</h3>{!notes?.results.length&&<p>No feedback yet.</p>}{notes?.results.map(n=><article className="community-record" id={'feedback-'+n.id} key={n.id}><strong>{n.name} · {n.tester}</strong><p className="community-text">{n.body}</p></article>)}</section>
  </div></section>}
  </main><Footer/></>;
 }
