@@ -44,14 +44,14 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  <h2>Post an app</h2><div className="post-options"><section className="post-option"><h3>Request closed testers</h3><p>Request volunteer testers for free. Approved testers can see your opt-in link and instructions.</p>
  <form action={endpoint} method="post" className="community-form">{hidden('action','post')}<div className="form-grid">
  <label className="field">App name<input name="name" required maxLength={80}/></label><label className="field">Tester spots<input name="spots" type="number" required min={1} max={100} defaultValue={12}/></label>
- <label className="field wide">Public description<textarea name="description" required maxLength={600}/></label><label className="field">Android requirements<input name="android" required maxLength={80} placeholder="Android 12 or later"/></label>
+ <label className="field wide">Public description<textarea name="description" required maxLength={600} aria-describedby="closed-description-hint"/><small id="closed-description-hint">Tell testers what your app does, who it is for, and what you would like feedback on. Anyone can read this.</small></label><label className="field">Android requirements<input name="android" required maxLength={80} placeholder="Android 12 or later"/></label>
  <label className="field">Google Play closed-testing link<input name="link" type="url" required maxLength={500} placeholder="https://play.google.com/apps/testing/com.example.app" aria-describedby="play-link-help"/><small id="play-link-help">Copy the web opt-in link from your active closed test in Play Console. Only approved testers can see it.</small></label><label className="field wide">Private testing instructions<textarea name="instructions" required maxLength={1500} placeholder="Which flows should testers try?"/></label>
  </div><button className="button">Publish closed test</button></form></section>
  {google&&<section className="post-option"><h3>List an app already live on Google Play</h3><p>Share your public listing so visitors can open Google Play and install your app.</p>
  <form action={endpoint} method="post" className="community-form">{hidden('action','post-live')}<div className="form-grid">
  <label className="field">App name<input name="name" required maxLength={80}/></label>
  <label className="field">Android requirements<input name="android" required maxLength={80} placeholder="Android 12 or later"/></label>
- <label className="field wide">Public description<textarea name="description" required maxLength={600}/></label>
+ <label className="field wide">Public description<textarea name="description" required maxLength={600} aria-describedby="live-description-hint"/><small id="live-description-hint">Tell people what your app does, who it helps, and why they might want to try it. Anyone can read this.</small></label>
  <label className="field wide">Official Play Store app link<input name="link" type="url" required maxLength={500} placeholder="https://play.google.com/store/apps/details?id=…" /></label>
  </div><button className="button">Publish Play Store listing</button></form></section>}</div>
  </>}</section>
