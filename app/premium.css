@@ -24,3 +24,32 @@
 @keyframes phone-hover-tiny{0%,100%{transform:scale(.84) translateY(0) rotate(-7deg)}50%{transform:scale(.84) translateY(-7px) rotate(-4deg)}}
 .playback-controls button{min-width:28px;min-height:28px}.scene-controls button{height:24px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-copy>*,.headline-spark,.testing-stage,.testing-stage *,.faq-list details[open] p{animation:none!important}.testing-stage *,.button,.button:before,.button svg,.text-link svg,.issue-card,.pricing-card,.step,.step-top svg,.feature-list li svg,.faq-plus{transition:none!important}[data-reveal]{opacity:1!important;transform:none!important;transition:none!important}.touch-cursor{display:none}.button:hover,.step:hover,.pricing-card:hover{transform:none}.benefit-visual:hover .issue-card{transform:rotate(-4deg)}}
+
+.faq-list details > summary {
+  padding: 8px 12px;
+  margin: -8px -12px;
+  border-radius: 9px;
+}
+.faq-list details > summary:focus-visible,
+.faq-list details[open] > summary {
+  background: color-mix(in srgb, var(--lane-violet) 13%, transparent);
+}
+@media (hover: hover) {
+  .faq-list details > summary:hover {
+    background: color-mix(in srgb, var(--lane-violet) 13%, transparent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .faq-list details > summary { transition: background-color .2s ease; }
+  @supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+    .faq-list details { interpolate-size: allow-keywords; }
+    .faq-list details::details-content {
+      block-size: 0;
+      opacity: 0;
+      overflow: clip;
+      transition: block-size .28s ease, opacity .24s ease, content-visibility .28s allow-discrete;
+    }
+    .faq-list details[open]::details-content { block-size: auto; opacity: 1; }
+    .faq-list details[open] p { animation: none; }
+  }
+}
