@@ -4,7 +4,7 @@ import {params, supaData} from '../../../../lib/community-supabase';
 import {identity, memberProfile, usesGoogle} from '../../google-data';
 
 export const dynamic = 'force-dynamic';
-export const metadata = {title: 'App discussion', robots: {index: false}};
+export const metadata = {title: 'App comments', robots: {index: false}};
 
 type Comment = {
  id: string;
@@ -30,7 +30,7 @@ export default async function Discussion({params: route, searchParams}: {
  return <><Header session={user?{name:member?.name||user.displayName||'Member',google:true}:null}/>
  <main className="wrap page-shell community-page"><article className="panel prose">
  <a className="text-link" href="/community#directory">← App directory</a>
- <h1>{apps[0].name}</h1><h2>Discussion</h2>
+ <h1>{apps[0].name}</h1><h2>Comments</h2>
  {query.notice === 'sent' && <p role="status">Your comment was posted.</p>}
  {query.notice === 'error' && <p role="status">Could not post your comment. Enter 2–1,000 characters and try again.</p>}
  {member ? <form action="/api/community" method="post" className="community-form">
