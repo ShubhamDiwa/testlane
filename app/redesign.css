@@ -1,0 +1,111 @@
+/* Shared design tokens and the new community-facing visual system. */
+:root {
+  --lane-ink: #17182a;
+  --lane-muted: #52576a;
+  --lane-violet: #6247ce;
+  --lane-mint: #d2f987;
+  --lane-stroke: #e2e2ed;
+  --lane-paper: #f8f8fc;
+}
+body {background:var(--lane-paper);color:var(--lane-ink)}
+.header .brand-mark {background:linear-gradient(140deg,#886af3,#5a40bf);box-shadow:0 3px 12px #6247ce35}
+.header .button-small {border-radius:99px}
+.header:has(+ .home-redesign) {background:#151629;color:#f8f7ff;border-bottom:1px solid #ffffff17}
+.header:has(+ .home-redesign) :is(.brand,.login-link,nav a) {color:#f4f0ff}
+.header:has(+ .home-redesign) .brand-period {color:var(--lane-mint)}
+.header:has(+ .home-redesign) .button-small {background:var(--lane-mint);color:#202518}
+.header:has(+ .home-redesign) .button-small:hover {background:#e1ffad}
+
+.home-redesign .launch-hero {
+  position:relative;isolation:isolate;overflow:hidden;color:#faf9ff;background:
+  radial-gradient(ellipse at 90% 12%,#554293 0,transparent 47%),
+  radial-gradient(ellipse at 5% 100%,#283c47 0,transparent 42%),#151629;
+}
+.launch-hero::before {content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:46px 46px;opacity:.05}
+.home-redesign .launch-hero .hero {gap:clamp(28px,5vw,74px);padding-block:clamp(52px,7vw,104px);grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.launch-hero .hero-copy {align-self:center}
+.launch-hero .hero-copy>.eyebrow {width:fit-content;padding:9px 13px;border:1px solid #ffffff30;border-radius:99px;color:#e4dbfc;font-size:9px}
+.launch-hero .status-dot {background:var(--lane-mint);box-shadow:0 0 12px #d2f98780}
+.home-redesign .launch-hero .hero h1 {font-size:clamp(52px,6.35vw,96px);font-weight:680;line-height:.99;letter-spacing:-.075em;margin-block:25px 23px;color:#faf9ff}
+.home-redesign .launch-hero .hero h1 .purple {display:inline-block;color:var(--lane-mint);background:none}
+.launch-hero .hero-description {color:#d5d2e6;font-size:clamp(15px,1.35vw,18px);line-height:1.7;max-width:415px}
+.launch-hero .hero-actions {gap:12px}
+.launch-hero .hero-actions :is(.button,.text-link) {min-height:53px;border-radius:10px;padding:13px 19px;justify-content:center}
+.launch-hero .hero-actions .button {background:var(--lane-mint);color:#202518;box-shadow:0 10px 25px #10141d55}
+.launch-hero .hero-actions .button:hover {background:#e3ffb1}
+.launch-hero .hero-actions .text-link {color:#faf8ff;border:1px solid #ffffff45;background:#ffffff0a}
+.launch-hero .hero-actions .text-link:hover {background:#ffffff16}
+.launch-hero .hero-assurances {color:#c5c4d6;font-size:11px}
+.launch-hero .hero-assurances svg {color:var(--lane-mint)}
+.home-redesign .launch-hero .testing-stage {border:1px solid #ffffff49;border-radius:24px;box-shadow:0 24px 70px #0808167d;max-width:none}
+.home-redesign .facts-strip {background:#eeedf9;border-color:#e0dff0}
+.home-redesign .facts-inner strong {font-size:13px;color:#292541}
+.home-redesign .facts-inner small {font-size:11px;color:#5d5a70}
+.home-redesign .facts-inner svg {color:#6247ce}
+.home-redesign .section-top h2,.home-redesign .choose-lane h2,.home-redesign .benefit-copy h2 {font-size:clamp(37px,5vw,61px);letter-spacing:-.065em}
+.home-redesign .step {padding:22px;border:1px solid var(--lane-stroke);border-radius:17px;background:white;box-shadow:0 4px 18px #201b4707}
+.home-redesign .step p {color:var(--lane-muted);font-size:13px}
+.home-redesign .step-top span {font-variant-numeric:tabular-nums;color:#6c54c5;font-weight:700}
+.home-redesign .step-top svg {color:#6247ce;background:#f1ecff;width:37px;height:37px;padding:8px;border-radius:10px}
+.home-redesign .benefits-section {background:#efedf9;border-color:#e4e1f3}
+.home-redesign .benefit-visual {background:radial-gradient(ellipse at top,#5b49a0,#25243e 75%);box-shadow:0 14px 35px #42346b28}
+.home-redesign .benefit-visual .mini-label {color:#f0e9ff}
+.home-redesign .benefit-visual .decor-cross {color:#c9f487}
+.home-redesign .benefit-copy>p,.home-redesign .feature-list span {color:var(--lane-muted)}
+.lane-grid {display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lane-card {border-radius:21px;min-width:0;padding:clamp(24px,4vw,46px);border:1px solid #ddd4f7}
+.lane-card .eyebrow {margin-top:24px;color:inherit}
+.lane-card h3 {font-size:clamp(26px,3.2vw,42px);letter-spacing:-.055em;margin:8px 0 11px;line-height:1.07}
+.lane-card p {margin-bottom:24px}
+.lane-icon {display:grid;place-items:center;width:48px;height:48px;border:1px solid #ffffff35;border-radius:14px;background:#ffffff16}
+.developer-lane {background:#25223d;color:white;border-color:#25223d}
+.developer-lane p {color:#dbd3f0}
+.developer-lane .button {background:var(--lane-mint);color:#202518}
+.tester-lane {background:#eeebfa;color:#28213e}
+.tester-lane .lane-icon {background:#fff;border-color:#ddd4f7;color:var(--lane-violet)}
+.tester-lane p {color:#514761}
+.home-redesign .final-cta {border-radius:19px;background:linear-gradient(118deg,#27233e,#57439c)}
+
+/* Give the directory and member workspace their own hierarchy. */
+.community-page .community-masthead {display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.38fr);gap:25px;align-items:end;background:radial-gradient(ellipse at right top,#594296,transparent 68%),#23223a;color:#f8f6ff;border-radius:23px;padding:clamp(25px,5vw,58px);margin-bottom:18px}
+.community-page .community-masthead .eyebrow {color:#e0d4fc}
+.community-page .community-masthead h1 {font-size:clamp(38px,6.6vw,76px);letter-spacing:-.065em;margin-block:12px}
+.community-page .community-masthead p {color:#d9d3e9}
+.community-page .community-masthead .button {background:var(--lane-mint);color:#202518}
+.community-page .community-masthead .outline-button {color:#fff;border-color:#ffffff55;background:#ffffff0b}
+.community-metrics {display:grid;gap:10px}
+.community-metrics>div {display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 16px;border:1px solid #ffffff2b;border-radius:12px;background:#ffffff10}
+.community-metrics strong {color:var(--lane-mint);font-size:clamp(23px,3vw,39px);line-height:1;letter-spacing:-.04em}
+.community-metrics span {color:#f1eafc;font-size:12px;text-align:right}
+.community-nav {display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.community-nav a {background:white;color:#443764;border:1px solid #dcd7ed;border-radius:99px;padding:9px 13px;font-size:13px;font-weight:600}
+.community-nav a:hover {background:#eee9ff}
+.community-page #post {margin-top:36px}
+.community-page .panel {border-color:var(--lane-stroke);border-radius:17px;box-shadow:0 8px 26px #221b4508}
+.community-page .community-section>h2 {letter-spacing:-.045em}
+.community-page .community-grid {gap:18px}
+.community-page .community-grid>article .eyebrow {display:inline-flex;background:#eee8ff;color:#514199;border-radius:99px;padding:6px 10px}
+.community-page :is(.field input,.field textarea) {background:#f8f7fc;border-color:#ded9ec}
+.community-page :is(.field input,.field textarea):focus-visible {outline:2px solid #7757df;outline-offset:1px}
+.login-panel {border-color:var(--lane-stroke);border-radius:20px;box-shadow:0 15px 55px #2a205016}
+.login-panel h1 {letter-spacing:-.065em}
+
+@media(max-width:800px){
+ .home-redesign .launch-hero .hero {grid-template-columns:minmax(0,1fr)}
+ .home-redesign .launch-hero .testing-stage {max-width:570px}
+ .home-redesign .facts-inner small {font-size:10px}
+ .community-page .community-masthead {grid-template-columns:1fr}
+ .community-metrics {grid-template-columns:1fr 1fr}
+ .community-metrics>div {display:grid;justify-content:start}
+ .community-metrics span {text-align:left}
+}
+@media(max-width:530px){
+ .home-redesign .launch-hero .hero h1 {font-size:clamp(41px,10.5vw,55px)!important;letter-spacing:-.065em!important}
+ .launch-hero .hero-actions :is(.button,.text-link){padding:11px 14px;min-height:46px}
+ .home-redesign .step {padding:16px}
+ .lane-grid {grid-template-columns:1fr}
+ .community-page .community-masthead .hero-actions {gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .home-redesign .step:hover {transform:none}
+}
