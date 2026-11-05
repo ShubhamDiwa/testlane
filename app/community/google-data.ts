@@ -10,7 +10,7 @@ export async function memberProfile(user:{userId:string;token?:string}){
 type GoogleApp={id:string;owner:string;name:string;description:string;android:string;spots:number;community_members:{name:string}|null};
 export async function googleDirectory(user?:{userId:string;token?:string}|null):Promise<Listing[]>{
  const [apps,requests]=await Promise.all([
-  supaData<GoogleApp[]>('community_apps?'+params({select:'id,owner,name,description,android,spots,community_members(name)',order:'created_at.desc',limit:'100'}),user?.token),
+  supaData<GoogleApp[]>('community_apps?'+params({select:'id,owner,name,description,android,spots,community_members!community_apps_owner_fkey(name)',order:'created_at.desc',limit:'100'}),user?.token),
   user?supaData<{app:string;status:string}[]>('community_requests?'+params({select:'app,status',member:'eq.'+user.userId}),user.token):[]
  ]);
  const states=new Map(requests.map(r=>[r.app,r.status]));
