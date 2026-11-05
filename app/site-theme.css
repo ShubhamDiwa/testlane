@@ -60,3 +60,13 @@ html[data-theme=dark]{
   from { opacity: .42; translate: 0 16px; }
   to { opacity: 1; translate: 0 0; }
 }
+
+[data-theme=dark] .home-redesign .issue-card {
+  background: #242131;
+  border-color: #514563;
+  color: #f0edf6;
+}
+[data-theme=dark] .home-redesign .issue-card :is(p, .issue-device) { color: #cdc4db; }
+[data-theme=dark] .home-redesign .issue-resolution { color: #c5d9b7; }
+[data-theme=dark] .home-redesign .issue-card .bug-icon { background: #3c3155; color: #e2d6ff; }
+[data-theme=dark] .home-redesign .issue-card .amber { background: #433624; color: #f0d29c; }
