@@ -68,3 +68,11 @@
   .home-redesign .facts-inner > div:hover { translate: 0 -4px; }
   .home-redesign .facts-inner > div:hover svg { transform: scale(1.18) rotate(-8deg); }
 }
+
+.home-community-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 16px;
+}
+.home-community-post { min-width: 0; overflow-wrap: anywhere; }
+.home-community-post h3 a:hover { text-decoration: underline; }

@@ -1,3 +1,4 @@
+import HomeCommunity from './home-community';
 import { ArrowRight, Check, CheckCheck, ShieldCheck, MessageSquareText, Activity, ArrowUpRight, Smartphone, Clock3, Bug, Users } from 'lucide-react';
 import { Header, Footer } from './ui';
 import { FAQ } from './faq';
@@ -17,6 +18,7 @@ export default function Home() {
       <TestingAnimation/>
     </section></div>
     <section className="facts-strip"><div className="wrap facts-inner"><span className="facts-intro">Small acts of feedback.<br/><b>Better apps for everyone.</b></span><div><Users/><span><strong>Free to join</strong><small>Recruit volunteer testers</small></span></div><div><Clock3/><span><strong>Closed testing</strong><small>Set your own testing goals</small></span></div><div><MessageSquareText/><span><strong>Useful feedback</strong><small>Find friction before your users do</small></span></div></div></section>
+    <HomeCommunity/>
     <section id="how-it-works" className="section wrap"><div className="section-top"><div><div className="eyebrow">LESS CHASING. MORE BUILDING.</div><h2>From “almost ready”<br/>to ready for the next step.</h2></div><p>You focus on improving your app.<br/>Find volunteers and coordinate testing together.</p></div>
       <div className="steps-grid">{[
         ['01',<Smartphone key="a"/>, 'Tell us about your app', 'Share your closed-testing link, target users, and the workflows you want tested. Your Play Console stays yours.'],
