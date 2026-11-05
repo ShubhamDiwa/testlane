@@ -43,6 +43,19 @@ export async function POST(req:Request){
    return back('Your app is listed.','closed-tests');
   }
   const app=val('app',50);
+  if(action==='comment'&&google){
+   if(!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(app))return back('Listing unavailable.','directory');
+   const discussion='/community/discussion/'+app;
+   let notice='error';
+   try{
+    const body=val('body',1000);
+    if(body.length>=2){
+     await supaData('community_comments',token,{app,body});
+     notice='sent';
+    }
+   }catch{}
+   return new Response(null,{status:303,headers:{Location:discussion+'?notice='+notice,'Cache-Control':'no-store'}});
+  }
   if(action==='remove'&&google){
    if(!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(app))return back('Listing unavailable.','directory');
    const removed=await supaData<boolean>('rpc/community_remove_app',token,{p_app:app});

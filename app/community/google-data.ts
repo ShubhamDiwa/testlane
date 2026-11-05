@@ -22,7 +22,7 @@ export async function googleDirectory(user?:{userId:string;token?:string}|null):
 export async function googleWorkspace(user:{userId:string;token?:string}){
  const [incoming,joined,notes]=await Promise.all([
   supaData<{app:string;member:string;play_email:string;status:string;community_apps:{name:string};community_members:{name:string}}[]>('community_requests?'+params({select:'app,member,play_email,status,community_apps!inner(name,owner),community_members(name)','community_apps.owner':'eq.'+user.userId,status:'in.(pending,approved)'}),user.token),
-  supaData<{app:string;community_apps:{name:string;community_app_details:{link:string;instructions:string}|null}}[]>('community_requests?'+params({select:'app,community_apps(name,community_app_details(link,instructions))',member:'eq.'+user.userId,status:'eq.approved'}),user.token),
+  supaData<{app:string;community_apps:{name:string;community_app_details:{link:string;instructions:string}|null}|null}[]>('community_requests?'+params({select:'app,community_apps(name,community_app_details(link,instructions))',member:'eq.'+user.userId,status:'eq.approved'}),user.token),
   supaData<{id:string;member:string;body:string;community_requests:{community_apps:{name:string}}}[]>('community_feedback?'+params({select:'id,member,body,community_requests!inner(community_apps!inner(name,owner))','community_requests.community_apps.owner':'eq.'+user.userId,order:'created_at.desc',limit:'100'}),user.token)
  ]);
  const ids=[...new Set(notes.map(n=>n.member))];
@@ -30,7 +30,7 @@ export async function googleWorkspace(user:{userId:string;token?:string}){
  const names=new Map(people.map(p=>[p.id,p.name]));
  return [
   {results:incoming.map(r=>({app:r.app,member:r.member,email:r.play_email,status:r.status,tester:r.community_members.name,name:r.community_apps.name}))},
-  {results:joined.flatMap(r=>{const d=r.community_apps.community_app_details;return d?[{id:r.app,name:r.community_apps.name,...d}]:[]})},
+  {results:joined.flatMap(r=>{const a=r.community_apps;const d=a?.community_app_details;return a&&d?[{id:r.app,name:a.name,...d}]:[]})},
   {results:notes.map(r=>({id:r.id,name:r.community_requests.community_apps.name,tester:names.get(r.member)??'Community member',body:r.body}))}
  ] as const;
 }

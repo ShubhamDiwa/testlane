@@ -1,3 +1,4 @@
+import {supaData} from '../../lib/community-supabase';
 import {RemoveListing} from './remove-listing';
 import { ArrowUpRight, Smartphone } from 'lucide-react';
 import {Header,Footer} from '../ui';
@@ -11,7 +12,7 @@ const endpoint='/api/community';
 const hidden=(name:string,value:string)=><input type="hidden" name={name} value={value}/>;
 export default async function Community({searchParams}:{searchParams:Promise<{notice?:string}>}){
  const google=usesGoogle(),user=await identity(),db=google?null:communityDb(),id=user?.userId??'';
- const [directory,member,params]=await Promise.all([google?googleDirectory(user):listApps(id),user?memberProfile(user):null,searchParams]);
+ const [directory,member,params,signupCount]=await Promise.all([google?googleDirectory(user):listApps(id),user?memberProfile(user):null,searchParams,google?supaData<number>('rpc/community_signup_count'):null]);
  const [incoming,joined,notes]=member&&user?(google?await googleWorkspace(user):await Promise.all([
  db!.prepare("SELECT a.name,a.id AS app,m.name AS tester,r.member,r.play_email AS email,r.status FROM community_requests r JOIN community_apps a ON a.id=r.app JOIN members m ON m.id=r.member WHERE a.owner=? AND r.status IN ('pending','approved')").bind(id).all<{name:string;app:string;tester:string;member:string;email:string;status:string}>(),
  db!.prepare("SELECT a.id,a.name,a.link,a.instructions FROM community_requests r JOIN community_apps a ON a.id=r.app WHERE r.member=? AND r.status='approved'").bind(id).all<{id:string;name:string;link:string;instructions:string}>(),
@@ -20,7 +21,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  const liveApps=directory.filter(app=>app.play_store_url);
  const closedTests=directory.filter(app=>!app.play_store_url);
  return <><Header session={user?{name:member?.name||user.displayName||'Member',google}:null}/><main className="wrap page-shell community-page">
- <div className="page-heading community-masthead"><div><div className="eyebrow">TESTLANE / COMMUNITY</div><h1>Find your next test.</h1><p>Explore Android apps, recruit volunteer testers, and share useful feedback.</p><div className="hero-actions"><a className="button" href="#try-apps">Try new apps</a><a className="outline-button" href="#post">Post my app</a></div></div><aside className="community-metrics" aria-label="Directory overview"><div><strong>{directory.length}</strong><span>Apps in this view</span></div><div><strong>{directory.reduce((sum,app)=>sum+(app.play_store_url?0:Math.max(0,app.spots-app.approved)),0)}</strong><span>Open tester spots</span></div></aside></div>
+ <div className="page-heading community-masthead"><div><div className="eyebrow">TESTLANE / COMMUNITY</div><h1>Find your next test.</h1><p>Explore Android apps, recruit volunteer testers, and share useful feedback.</p><div className="hero-actions"><a className="button" href="#try-apps">Try new apps</a><a className="outline-button" href="#post">Post my app</a></div></div><aside className="community-metrics" aria-label="Directory overview"><div><strong>{directory.length}</strong><span>Apps in this view</span></div>{signupCount!==null&&<div><strong>{signupCount.toLocaleString('en-US')}</strong><span>Total signups</span></div>}<div><strong>{directory.reduce((sum,app)=>sum+(app.play_store_url?0:Math.max(0,app.spots-app.approved)),0)}</strong><span>Open tester spots</span></div></aside></div>
  <nav className="community-nav" aria-label="Community sections"><a href="#try-apps">Try new apps</a><a href="#closed-tests">Closed tests</a><a href="#post">Post an app</a>{member&&<a href="#workspace">My workspace</a>}</nav>
  {typeof params.notice==='string'&&<p role="status" className="preview-banner">{params.notice.slice(0,180)}</p>}
  <div id="directory"><section id="try-apps" className="community-section">
@@ -28,6 +29,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  {liveApps.length?<div className="community-grid live-app-grid">{liveApps.map(app=><article className="panel listing-card" key={app.id}>
  <div className="listing-heading"><span className="listing-icon"><Smartphone size={21} aria-hidden="true"/></span><div><div className="eyebrow">Live on Google Play</div><h3>{app.name}</h3></div></div>
  <p className="community-text">{app.description}</p>
+ {google&&<a className="text-link" href={'/community/discussion/'+app.id}>View discussion</a>}
  <div className="listing-footer"><p>Posted by <strong>{app.developer}</strong><br/>Android {app.android.replace(/^android\s+/i,'')}</p>
  <a className="outline-button" href={app.play_store_url!} target="_blank" rel="noopener noreferrer">View on Google Play <ArrowUpRight size={15} aria-hidden="true"/></a>{google&&app.owner===id&&<RemoveListing id={app.id} name={app.name}/>}</div>
  </article>)}</div>:<p>No live apps yet. <a className="text-link" href="#post">List your Play Store app</a></p>}
@@ -35,6 +37,7 @@ export default async function Community({searchParams}:{searchParams:Promise<{no
  <section id="closed-tests" className="community-section"><div className="eyebrow">HELP DEVELOPERS LAUNCH</div><h2>Closed tests</h2>
  {closedTests.length===0?<div className="panel"><h3>No closed tests listed yet</h3><p>Post an Android closed test to recruit volunteers.</p><a className="outline-button" href="#post">Get my app tested</a></div>:<div className="community-grid">{closedTests.map(app=><article key={app.id} className="panel listing-card"><div className="eyebrow">{Math.max(0,app.spots-app.approved)} tester spots open</div><h3>{app.name}</h3><p className="community-text">{app.description}</p><p>{app.android} · Posted by {app.developer}</p>
  {app.owner===id?<div className="hero-actions"><span className="badge purple-badge">Your app</span>{google&&<RemoveListing id={app.id} name={app.name}/>}</div>:app.status==='approved'?<a className="outline-button" href="#workspace">Open testing instructions</a>:app.status?<span className="badge purple-badge">Request {app.status}</span>:app.approved>=app.spots?<span className="badge purple-badge">No spots left</span>:member?<form action={endpoint} method="post" className="community-form">{hidden('action','request')}{hidden('app',app.id)}<label className="field">Google Play email<input type="email" name="playEmail" required maxLength={254}/></label><p>Sending a request shares this email with the developer so they can add you in Play Console.</p><button className="button button-small">Request to test</button></form>:<a className="outline-button" href="#post">Join to request a spot</a>}
+ {google&&<a className="text-link" href={'/community/discussion/'+app.id}>View discussion</a>}
  </article>)}</div>}</section></div>
  <section id="post" className="panel">
  {!user?<><h2>Join Testlane</h2><p>Sign in to register, post an app, or request to test.</p><a className="button" target="_top" href={google?'/auth/google/start':chatGPTSignInPath('/community#post')}>Continue with {google?'Google':'ChatGPT'}</a></>:!member?<><h2>Create your member profile</h2><p>Your display name appears to other members. Your account email stays private.</p><form action={endpoint} method="post" className="community-form">{hidden('action','register')}<label className="field">Display name<input name="name" required minLength={2} maxLength={40}/></label><button className="button">Join for free</button></form></>:<>
