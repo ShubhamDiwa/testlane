@@ -38,3 +38,11 @@ html[data-theme=dark]{
 [data-theme=dark] :is(.field input,.field textarea,.filter-input)::placeholder{color:#b5abc4}
 [data-theme=dark] :is(.preview-banner,.purple-badge,.profile-icon,.listing-icon,.community-page .community-grid>article .eyebrow){background:#3c3155;color:#e2d6ff;border-color:#53446d}
 [data-theme=dark] :is(.prose a,.login-divider a):not(.button){color:#c9b6ff}
+[data-theme=dark] .home-redesign .step {
+  background: var(--dark-surface);
+  border-color: var(--lane-stroke);
+  color: var(--ink);
+}
+[data-theme=dark] .home-redesign .step:hover { border-color: #72638a; }
+[data-theme=dark] .home-redesign .step-top span { color: #c9b6ff; }
+[data-theme=dark] .home-redesign .step-top svg { background: #3c3155; color: #e2d6ff; }
