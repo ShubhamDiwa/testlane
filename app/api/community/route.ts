@@ -1,5 +1,6 @@
 import {identity,memberProfile,usesGoogle} from '../../community/google-data';
 import {supaData} from '../../../lib/community-supabase';
+import {playTestingLink} from '../../../lib/play-testing-link';
 import {communityDb} from '../../community/data';
 
 export async function POST(req:Request){
@@ -25,10 +26,12 @@ export async function POST(req:Request){
   if(!await memberProfile(user))return back('Register as a member first.','post');
   if(action==='post'){
    const name=val('name',80),description=val('description',600),android=val('android',80),link=val('link',500),instructions=val('instructions',1500),spots=Number(val('spots',3));
-   let url:URL;try{url=new URL(link)}catch{return back('Enter a valid Google Play testing link.','post')}
-   if(!name||!description||!android||!instructions||!Number.isInteger(spots)||spots<1||spots>100||url.origin!=='https://play.google.com'||!/^\/apps\/testing\/[a-zA-Z0-9_.]+\/?$/.test(url.pathname))return back('Complete all fields and use a Google Play closed-testing opt-in link.','post');
-   if(google)await supaData('rpc/community_post_app',token,{p_name:name,p_description:description,p_android:android,p_spots:spots,p_link:url.href,p_instructions:instructions});
-   else await db!.prepare('INSERT INTO community_apps (id,owner,name,description,android,spots,link,instructions,created) VALUES (?,?,?,?,?,?,?,?,?)').bind(crypto.randomUUID(),id,name,description,android,spots,url.href,instructions,Date.now()).run();
+   if(!name||!description||!android||!instructions)return back('Enter the app name, description, Android requirements, and testing instructions.','post');
+   if(!Number.isInteger(spots)||spots<1||spots>100)return back('Tester spots must be a whole number from 1 to 100.','post');
+   const url=playTestingLink(link);
+   if(!url)return back('Paste a Google Play app listing URL with an id, or a closed-testing web link from Play Console.','post');
+   if(google)await supaData('rpc/community_post_app',token,{p_name:name,p_description:description,p_android:android,p_spots:spots,p_link:url,p_instructions:instructions});
+   else await db!.prepare('INSERT INTO community_apps (id,owner,name,description,android,spots,link,instructions,created) VALUES (?,?,?,?,?,?,?,?,?)').bind(crypto.randomUUID(),id,name,description,android,spots,url,instructions,Date.now()).run();
    return back('Your app is listed.','directory');
   }
   const app=val('app',50);
