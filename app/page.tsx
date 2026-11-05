@@ -4,6 +4,7 @@ import { FAQ } from './faq';
 import TestingAnimation from './testing-animation';
 import MotionEnhancements from './motion-enhancements';
 import './premium.css';
+import './future.css';
 
 export default function Home() {
   return <><Header/><main className="home-redesign"><MotionEnhancements/>

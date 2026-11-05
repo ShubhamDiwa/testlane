@@ -1,0 +1,47 @@
+.home-redesign .launch-hero .testing-stage{
+ --signal:#c7f794;
+ background:#111526;
+ border-color:#9686e15e;
+ box-shadow:0 30px 80px #08081588,inset 0 1px 0 #c1b2ff38;
+}
+.home-redesign .testing-stage[data-phase="1"]{--signal:#ffbe95}
+.home-redesign .testing-stage[data-phase="2"]{--signal:#8ff9dd}
+.home-redesign .testing-stage[data-phase="3"]{--signal:#b6a5ff}
+.home-redesign .testing-stage .stage-ambient{background:radial-gradient(ellipse at 48% 63%,#392f64 0,transparent 67%),radial-gradient(ellipse at 90% 4%,#302749 0,transparent 55%),#111526}
+.home-redesign .testing-stage .stage-ambient::after{background-image:radial-gradient(#bba5f84a .65px,transparent .65px);background-size:17px 17px}
+.home-redesign .testing-stage .stage-topline{color:#e4deff;font:600 10px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.15em}
+.home-redesign .testing-stage .stage-topline i{background:var(--signal);box-shadow:0 0 10px var(--signal)}
+.home-redesign .testing-stage .simulation-label{color:#d8d0fb;background:#aaa0ff15;border-color:#a79be54d;font-size:8px}
+.home-redesign .testing-stage .device-orbit{border-color:#a591eb49}
+.home-redesign .testing-stage .orbit-b{border-color:#9fead12e}
+.home-redesign .testing-stage .device-pedestal{background:radial-gradient(ellipse,#b4a5f575,transparent 68%)}
+.lab-circuit,.lab-scan{position:absolute;pointer-events:none}
+.lab-circuit{inset:0;width:100%;height:100%;stroke:#a58ee745;stroke-width:1}
+.lab-circuit .lab-signal{stroke:var(--signal);stroke-dasharray:10 300;stroke-width:1.6;opacity:.8;animation:lab-trace 5s linear infinite;animation-play-state:paused}
+.lab-scan{inset:8% 4%;background:linear-gradient(transparent 46%,#bcaff612 49%,var(--signal) 50%,transparent 51%);opacity:0;transform:translateY(-45%);animation:lab-sweep 5s ease-in-out infinite;animation-play-state:paused}
+.testing-stage[data-playing="true"] :is(.lab-signal,.lab-scan){animation-play-state:running}
+.home-redesign .testing-stage .stage-bottom{border-top:1px solid #bcaff32f;padding-top:10px}
+.home-redesign .testing-stage .scene-step{color:var(--signal);font-family:ui-monospace,Consolas,monospace;font-size:8px}
+.home-redesign .testing-stage .scene-description p{color:#eee9ff;font-size:12px}
+.home-redesign .testing-stage .scene-description{animation:lab-caption .4s ease-out both}
+.home-redesign .testing-stage .playback-controls button{color:#eee8ff;background:#ffffff10;border-color:#a496de69}
+.home-redesign .testing-stage .playback-controls button:hover{background:#ffffff2a}
+.home-redesign .testing-stage .scene-controls button::before{background:#6d6388}
+.home-redesign .testing-stage .scene-progress{background:var(--signal)}
+.home-redesign .testing-stage .scene-controls button{color:#ccc4e3}
+.home-redesign .testing-stage .session-chip{background:#232039;color:#e8e0ff;border-color:#b5a5ee63}
+.home-redesign .testing-stage .session-dot{background:var(--signal)}
+.home-redesign .launch-hero::after{content:'';position:absolute;z-index:-1;width:min(680px,90vw);aspect-ratio:1;right:-8%;top:-48%;pointer-events:none;background:radial-gradient(ellipse,#8a63e233,transparent 68%);animation:lab-ambient 12s ease-in-out infinite alternate}
+@keyframes lab-trace{to{stroke-dashoffset:-310}}
+@keyframes lab-sweep{0%,100%{opacity:0;transform:translateY(-40%)}15%{opacity:.24}65%{opacity:.18;transform:translateY(40%)}72%{opacity:0;transform:translateY(40%)}}
+@keyframes lab-caption{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lab-ambient{to{transform:translate(-12%,30%);opacity:.55}}
+@media(max-width:440px){
+ .home-redesign .testing-stage .stage-topline{font-size:8px;letter-spacing:.08em}
+ .home-redesign .testing-stage .simulation-label{font-size:6px}
+ .home-redesign .testing-stage .scene-description p{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .home-redesign .launch-hero::after,.home-redesign .testing-stage .scene-description,.lab-circuit .lab-signal,.lab-scan{animation:none!important}
+ .lab-scan{display:none}
+}

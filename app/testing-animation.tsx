@@ -26,8 +26,10 @@ export default function TestingAnimation(){
  function select(index:number){setPhase(index);setPlaying(false)}
  return <div ref={container} className="testing-stage" data-phase={phase} data-playing={active}>
    <div className="stage-ambient" aria-hidden="true"><i/><i/><i/></div>
-   <div className="stage-topline"><span><i/> THE TESTING EXPERIENCE</span><span className="simulation-label">ILLUSTRATIVE DEMO</span></div>
+   <div className="stage-topline"><span><i/> TESTLANE LAB</span><span className="simulation-label">DEMO SESSION / 01</span></div>
    <div className="device-scene" aria-hidden="true">
+     <svg className="lab-circuit" viewBox="0 0 520 440" preserveAspectRatio="none" fill="none"><path d="M0 84h92l50 50h92m286-45H405l-62 62h-35M0 338h110l43-43h50m317 44H402l-55-55h-48"/><path className="lab-signal" d="M0 84h92l50 50h92m286-45H405l-62 62h-35M0 338h110l43-43h50m317 44H402l-55-55h-48"/></svg>
+     <div className="lab-scan"/>
      <div className="device-orbit orbit-a"/><div className="device-orbit orbit-b"/>
      <div className="device-pedestal"/>
      <div className="phone-float"><div className="phone-body">
@@ -56,7 +58,7 @@ export default function TestingAnimation(){
      <div className="testing-notice" key={phase}><span className={'notice-icon notice-'+phase}><Icon size={18}/></span><div><b>{scene.notice}</b><span>{scene.detail}</span></div><span className="notice-spark">✳</span></div>
      <div className="session-chip"><span className="session-dot"/>14-day testing journey <ArrowUpRight size={12}/></div>
    </div>
-   <div className="stage-bottom"><div className="scene-description"><span className="scene-step">{scene.label}</span><p>{scene.title}</p></div><div className="playback-controls"><button type="button" aria-label={reduced?'Next testing scene':playing?'Pause testing animation':'Play testing animation'} onClick={()=>{if(reduced){setPhase((phase+1)%scenes.length)}else setPlaying(!playing)}} title={reduced?'Next testing scene':playing?'Pause animation':'Play animation'}>{playing&&!reduced?<Pause size={13}/>:<Play size={13}/>}</button><button type="button" aria-label="Replay testing animation" title="Replay" onClick={()=>{setPhase(0);setRestart(r=>r+1);if(!reduced)setPlaying(true)}}><RotateCcw size={13}/></button></div></div>
+   <div className="stage-bottom"><div className="scene-description" key={phase}><span className="scene-step">{scene.label}</span><p>{scene.title}</p></div><div className="playback-controls"><button type="button" aria-label={reduced?'Next testing scene':playing?'Pause testing animation':'Play testing animation'} onClick={()=>{if(reduced){setPhase((phase+1)%scenes.length)}else setPlaying(!playing)}} title={reduced?'Next testing scene':playing?'Pause animation':'Play animation'}>{playing&&!reduced?<Pause size={13}/>:<Play size={13}/>}</button><button type="button" aria-label="Replay testing animation" title="Replay" onClick={()=>{setPhase(0);setRestart(r=>r+1);if(!reduced)setPlaying(true)}}><RotateCcw size={13}/></button></div></div>
    <div className="scene-controls" aria-label="Choose a testing scene">{scenes.map((s,i)=><button key={s.name} type="button" aria-pressed={phase===i} aria-label={s.name} onClick={()=>select(i)}><span className="scene-progress" key={restart+'-'+phase+'-'+i}/><span>{String(i+1).padStart(2,'0')}</span></button>)}</div>
    <p className="sr-only">Example testing simulation: {scene.copy} No real app activity is being tracked.</p>
  </div>
