@@ -7,12 +7,15 @@ export async function POST(req:Request){
  const user=await getChatGPTUser();
  if(!user)return new Response('Sign in first.',{status:401});
  function back(message:string,section='workspace'){return new Response(null,{status:303,headers:{Location:'/community?notice='+encodeURIComponent(message)+'#'+section,'Cache-Control':'no-store'}})}
+ let signup=false;
+ const signupError=(reason:string)=>new Response(null,{status:303,headers:{Location:'/signup?error='+reason,'Cache-Control':'no-store'}});
  try{
   const form=await req.formData(),db=communityDb();
   const val=(key:string,max:number)=>{const v=form.get(key);if(typeof v!=='string'||v.length>max)throw new Error('invalid');return v.trim()};
   const action=val('action',20),id=user.userId;
   if(action==='register'){
-   const name=val('name',40);if(name.length<2)return back('Enter a display name of at least two characters.');
+   signup=form.get('from')==='signup';
+   const name=val('name',40);if(name.length<2)return signup?signupError('name'):back('Enter a display name of at least two characters.','post');
    await db.prepare('INSERT INTO members (id,name) VALUES (?,?) ON CONFLICT(id) DO NOTHING').bind(id,name).run();
    return back('You joined Testlane.');
   }
@@ -48,5 +51,5 @@ export async function POST(req:Request){
    return back(result.meta.changes?'Feedback sent.':'Only approved testers can submit feedback.');
   }
   return new Response('Unknown action',{status:400});
- }catch{return back('Could not save your change. Check the fields and try again.')}
+ }catch{return signup?signupError('save'):back('Could not save your change. Check the fields and try again.','post')}
 }

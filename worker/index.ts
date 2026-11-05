@@ -24,7 +24,7 @@ const worker = {
       };
     }
     const response = await runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
-    if (/^\/(?:community|api\/community)\/?$/.test(new URL(request.url).pathname)) {
+    if (/^\/(?:community|api\/community|login|signup)\/?$/.test(new URL(request.url).pathname)) {
       const headers = new Headers(response.headers);
       headers.set('Cache-Control', 'private, no-store');
       return new Response(response.body, {status: response.status, statusText: response.statusText, headers});
