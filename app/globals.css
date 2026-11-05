@@ -17,3 +17,14 @@
   font-family: "Space Grotesk", Manrope, Arial, sans-serif;
 }
 .home-redesign .launch-hero .hero h1 { font-weight: 700; }
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/dm-sans-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+:is(.header, .footer), :is(.header, .footer) .brand {
+  font-family: "DM Sans", Manrope, Arial, sans-serif;
+}
